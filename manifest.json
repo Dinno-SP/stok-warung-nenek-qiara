@@ -1,0 +1,19 @@
+{
+  "name": "Stok Warung Mie Par-Par Nenek Qiara",
+  "short_name": "Stok Nenek Qiara",
+  "description": "Aplikasi Administrasi Data Stok Barang Warung Mie Par-Par Nenek Qiara - Karya Dinno Spiner Potu",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#1e3a8a",
+  "theme_color": "#1e3a8a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

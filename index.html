@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#1e3a8a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Stok Nenek Qiara" />
+  <title>Sistem Stok - Warung Mie Par-Par Nenek Qiara</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="icon.svg" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #2563eb;
+      --accent: #f59e0b;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --border: #e2e8f0;
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      padding-bottom: 90px;
+    }
+
+    /* Header */
+    .app-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: #fff;
+      padding: 18px 16px 22px;
+      border-bottom-left-radius: 22px;
+      border-bottom-right-radius: 22px;
+      box-shadow: 0 4px 15px rgba(30, 58, 138, 0.25);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-title h1 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+    }
+
+    .brand-title p {
+      font-size: 0.78rem;
+      opacity: 0.9;
+      margin-top: 2px;
+    }
+
+    .btn-install {
+      background: var(--accent);
+      color: #0f172a;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      white-space: nowrap;
+    }
+
+    .btn-install:active {
+      transform: scale(0.96);
+    }
+
+    /* Summary Cards */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(8px);
+      padding: 10px;
+      border-radius: 12px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .stat-card .val {
+      font-size: 1.25rem;
+      font-weight: 800;
+      display: block;
+    }
+
+    .stat-card .lbl {
+      font-size: 0.7rem;
+      opacity: 0.9;
+    }
+
+    .stat-card.alert-box {
+      background: rgba(239, 68, 68, 0.28);
+      border-color: rgba(252, 165, 165, 0.5);
+    }
+
+    /* Container */
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 14px 14px 20px;
+    }
+
+    /* Search & Filter */
+    .search-bar {
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 12px 14px 12px 38px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      font-size: 0.92rem;
+      outline: none;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+    }
+
+    .search-bar input:focus {
+      border-color: var(--primary-light);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .category-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      margin-bottom: 14px;
+      scrollbar-width: none;
+    }
+
+    .category-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cat-btn {
+      padding: 8px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .cat-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px rgba(30, 58, 138, 0.25);
+    }
+
+    /* Item List */
+    .item-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .item-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 14px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .item-card.low-stock {
+      border-left: 5px solid var(--warning);
+    }
+
+    .item-card.out-stock {
+      border-left: 5px solid var(--danger);
+      background: #fffafa;
+    }
+
+    .item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .badge-rokok { background: #fee2e2; color: #991b1b; }
+    .badge-mie { background: #fef3c7; color: #92400e; }
+    .badge-minuman { background: #dcfce7; color: #166534; }
+    .badge-lainnya { background: #e0e7ff; color: #1e40af; }
+
+    .item-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .item-meta {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .stock-badge {
+      text-align: right;
+      min-width: 75px;
+    }
+
+    .stock-num {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.1;
+    }
+
+    .stock-unit {
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .status-pill {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 10px;
+      margin-top: 3px;
+    }
+
+    .status-aman { background: #d1fae5; color: #065f46; }
+    .status-menipis { background: #fef3c7; color: #92400e; }
+    .status-habis { background: #fee2e2; color: #991b1b; }
+
+    .item-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px dashed var(--border);
+      padding-top: 10px;
+      gap: 8px;
+    }
+
+    .quick-btns {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-qty {
+      border: none;
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-minus {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .btn-plus {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .btn-custom {
+      background: #e2e8f0;
+      color: #334155;
+      font-size: 0.75rem;
+      padding: 7px 10px;
+    }
+
+    .manage-btns {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-icon {
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 6px 9px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* History & Info Views */
+    .view-section {
+      display: none;
+    }
+
+    .view-section.active {
+      display: block;
+    }
+
+    .log-card {
+      background: var(--card);
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .log-masuk { border-left: 4px solid var(--success); }
+    .log-keluar { border-left: 4px solid var(--danger); }
+
+    .log-title { font-weight: 700; font-size: 0.9rem; }
+    .log-time { font-size: 0.73rem; color: var(--muted); margin-top: 2px; }
+    .log-qty { font-weight: 800; font-size: 0.95rem; }
+    .log-qty.plus { color: var(--success); }
+    .log-qty.minus { color: var(--danger); }
+
+    /* Floating Action Button */
+    .fab {
+      position: fixed;
+      bottom: 76px;
+      right: 18px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      font-size: 1.6rem;
+      font-weight: 700;
+      box-shadow: 0 6px 18px rgba(30, 58, 138, 0.4);
+      cursor: pointer;
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 0 10px;
+      z-index: 50;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-item {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    .nav-icon {
+      font-size: 1.2rem;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 100;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-box {
+      background: var(--card);
+      width: 100%;
+      max-width: 440px;
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .modal-header h3 {
+      font-size: 1.05rem;
+      color: var(--primary);
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+      color: #334155;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 12px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+
+    .info-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 16px;
+      border: 1px solid var(--border);
+      margin-bottom: 12px;
+    }
+
+    .info-card h3 {
+      font-size: 0.95rem;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .info-card p, .info-card li {
+      font-size: 0.84rem;
+      color: #334155;
+      line-height: 1.5;
+    }
+
+    .btn-secondary {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid var(--primary);
+      background: #eff6ff;
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 0.84rem;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 32px 16px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="header-top">
+      <div class="brand-title">
+        <h1>Warung Mie Par-Par Nenek Qiara</h1>
+        <p>Aplikasi Administrasi Stok Barang UMKM</p>
+      </div>
+      <button id="btnInstallApp" class="btn-install" onclick="handleInstallClick()">
+        📲 Install ke HP
+      </button>
+    </div>
+
+    <div class="summary-grid">
+      <div class="stat-card">
+        <span class="val" id="statTotalJenis">0</span>
+        <span class="lbl">Jenis Barang</span>
+      </div>
+      <div class="stat-card">
+        <span class="val" id="statTotalStok">0</span>
+        <span class="lbl">Total Unit Stok</span>
+      </div>
+      <div class="stat-card alert-box">
+        <span class="val" id="statPerluRestock">0</span>
+        <span class="lbl">Perlu Restock</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="container">
+
+    <!-- VIEW 1: DATA STOK -->
+    <section id="viewStok" class="view-section active">
+      <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Cari rokok, Indomie, Milo, kopi..." oninput="renderItems()" />
+      </div>
+
+      <div class="category-tabs">
+        <button class="cat-btn active" onclick="setCategory('Semua', this)">Semua</button>
+        <button class="cat-btn" onclick="setCategory('Rokok', this)">🚬 Rokok</button>
+        <button class="cat-btn" onclick="setCategory('Mie Instan', this)">🍜 Mie Instan</button>
+        <button class="cat-btn" onclick="setCategory('Minuman Sachet', this)">☕ Minuman Sachet</button>
+        <button class="cat-btn" onclick="setCategory('Menipis', this)">⚠️ Stok Menipis</button>
+      </div>
+
+      <div id="itemList" class="item-list"></div>
+    </section>
+
+    <!-- VIEW 2: RIWAYAT KELUAR MASUK -->
+    <section id="viewRiwayat" class="view-section">
+      <div class="info-card" style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h3 style="margin-bottom:2px;">Catatan Mutasi Stok</h3>
+          <p style="font-size:0.76rem; color:var(--muted);">Riwayat barang masuk (belanja) & keluar (terjual)</p>
+        </div>
+        <button class="btn-icon" onclick="clearLogs()">🗑️ Bersihkan</button>
+      </div>
+      <div id="logList"></div>
+    </section>
+
+    <!-- VIEW 3: PENGATURAN & INFO MAGANG -->
+    <section id="viewInfo" class="view-section">
+      <div class="info-card">
+        <h3>🏪 Identitas Mitra UMKM</h3>
+        <p><strong>Nama Mitra:</strong> Warung Mie Par-Par Nenek Qiara</p>
+        <p><strong>Penanggung Jawab:</strong> Muhammad Laura Rizky</p>
+        <p><strong>Fokus Usaha:</strong> Penjualan rokok, olahan & stok mie instan (Indomie, Mie Sedaap, Pop Mie), serta minuman sachet (Milo, Kuku Bima, Kopi, dll).</p>
+      </div>
+
+      <div class="info-card">
+        <h3>🎓 Identitas Mahasiswa Pelaksana</h3>
+        <p><strong>Nama:</strong> Dinno Spiner Potu</p>
+        <p><strong>NIM:</strong> 4122611034</p>
+        <p><strong>Kelas / Prodi:</strong> ABT 1B Malam / Administrasi Bisnis Terapan</p>
+        <p><strong>Program:</strong> Magang Sosial Mahasiswa - Bhakti Untuk Negeri (BUN)</p>
+      </div>
+
+      <div class="info-card">
+        <h3>⚙️ Kelola Data & Laporan</h3>
+        <p>Data tersimpan otomatis di memori perangkat HP ini (Offline-Ready).</p>
+        <button class="btn-secondary" onclick="exportCSV()">📊 Unduh Laporan Stok (.CSV / Excel)</button>
+        <button class="btn-secondary" onclick="resetDefaultData()" style="border-color:#dc2626; color:#dc2626; background:#fef2f2;">🔄 Muat Ulang Data Awal Warung</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- TOMBOL TAMBAH BARANG (+) -->
+  <button class="fab" onclick="openItemModal()" title="Tambah Barang Baru">+</button>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="switchView('viewStok', this)">
+      <span class="nav-icon">📦</span>
+      <span>Data Stok</span>
+    </button>
+    <button class="nav-item" onclick="switchView('viewRiwayat', this)">
+      <span class="nav-icon">📋</span>
+      <span>Riwayat</span>
+    </button>
+    <button class="nav-item" onclick="switchView('viewInfo', this)">
+      <span class="nav-icon">ℹ️</span>
+      <span>Info & Laporan</span>
+    </button>
+  </nav>
+
+  <!-- MODAL TAMBAH / EDIT BARANG -->
+  <div id="itemModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modalTitle">Tambah Barang Baru</h3>
+        <button class="close-btn" onclick="closeItemModal()">✕</button>
+      </div>
+      <form id="itemForm" onsubmit="saveItem(event)">
+        <input type="hidden" id="itemId" />
+        <div class="form-group">
+          <label>Nama Barang Dagangan</label>
+          <input type="text" id="itemName" required placeholder="Contoh: Indomie Goreng / Surya 16 / Milo" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Kategori</label>
+            <select id="itemCategory" required>
+              <option value="Rokok">Rokok</option>
+              <option value="Mie Instan">Mie Instan</option>
+              <option value="Minuman Sachet">Minuman Sachet</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Satuan</label>
+            <select id="itemUnit" required>
+              <option value="Bungkus">Bungkus</option>
+              <option value="Sachet">Sachet</option>
+              <option value="Renteng">Renteng</option>
+              <option value="Cup">Cup</option>
+              <option value="Slop">Slop</option>
+              <option value="Dus">Dus</option>
+              <option value="Pcs">Pcs</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Jumlah Stok Saat Ini</label>
+            <input type="number" id="itemStock" min="0" required placeholder="0" />
+          </div>
+          <div class="form-group">
+            <label>Batas Peringatan Minimum</label>
+            <input type="number" id="itemMin" min="1" required placeholder="5" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Harga Jual per Satuan (Rp)</label>
+          <input type="number" id="itemPrice" min="0" required placeholder="Contoh: 3500" />
+        </div>
+        <button type="submit" class="btn-submit">💾 Simpan Data Barang</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL UPDATE STOK BANYAK (MASUK / KELUAR) -->
+  <div id="adjustModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="adjustTitle">Update Jumlah Stok</h3>
+        <button class="close-btn" onclick="closeAdjustModal()">✕</button>
+      </div>
+      <form onsubmit="submitAdjustStock(event)">
+        <input type="hidden" id="adjustId" />
+        <p id="adjustItemName" style="font-weight:700; margin-bottom:12px; color:#334155;"></p>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Jenis Transaksi</label>
+            <select id="adjustType">
+              <option value="masuk">➕ Barang Masuk (Belanja)</option>
+              <option value="keluar">➖ Barang Keluar (Terjual)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Jumlah</label>
+            <input type="number" id="adjustQty" min="1" value="1" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Keterangan (Opsional)</label>
+          <input type="text" id="adjustNote" placeholder="Contoh: Belanja stok baru / Terjual harian" />
+        </div>
+        <button type="submit" class="btn-submit">✅ Terapkan Perubahan Stok</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL PANDUAN INSTALL KE HP -->
+  <div id="installGuideModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>📲 Cara Install Aplikasi ke HP</h3>
+        <button class="close-btn" onclick="document.getElementById('installGuideModal').classList.remove('open')">✕</button>
+      </div>
+      <p style="font-size:0.86rem; line-height:1.55; color:#334155; margin-bottom:10px;">
+        Agar web ini menjadi aplikasi di layar utama Handphone (HP):
+      </p>
+      <ol style="font-size:0.84rem; line-height:1.6; color:#334155; padding-left:18px; margin-bottom:14px;">
+        <li>Buka link web ini menggunakan aplikasi <strong>Google Chrome</strong> (Android) atau <strong>Safari</strong> (iPhone).</li>
+        <li>Tekan ikon <strong>Titik Tiga (⋮)</strong> di pojok kanan atas browser Chrome.</li>
+        <li>Pilih menu <strong>"Tambahkan ke layar utama" (Add to Home screen)</strong> atau <strong>"Instal aplikasi" (Install app)</strong>.</li>
+        <li>Tekan <strong>Instal / Tambah</strong>, maka ikon aplikasi <em>Warung Nenek Qiara</em> akan muncul di menu HP.</li>
+      </ol>
+      <button class="btn-submit" onclick="document.getElementById('installGuideModal').classList.remove('open')">Saya Mengerti</button>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY_ITEMS = 'warung_nenek_qiara_items_v1';
+    const STORAGE_KEY_LOGS = 'warung_nenek_qiara_logs_v1';
+
+    // Data awal sesuai produk Warung Mie Par-Par Nenek Qiara
+    const DEFAULT_ITEMS = [
+      { id: 1, name: 'Rokok Gudang Garam Surya 16', category: 'Rokok', unit: 'Bungkus', stock: 18, minStock: 5, price: 34000 },
+      { id: 2, name: 'Rokok Sampoerna Mild 16', category: 'Rokok', unit: 'Bungkus', stock: 14, minStock: 5, price: 35000 },
+      { id: 3, name: 'Rokok Gudang Garam Filter (Garpit)', category: 'Rokok', unit: 'Bungkus', stock: 4, minStock: 5, price: 28000 },
+      { id: 4, name: 'Rokok Marlboro Merah', category: 'Rokok', unit: 'Bungkus', stock: 10, minStock: 4, price: 42000 },
+      { id: 5, name: 'Indomie Goreng Original', category: 'Mie Instan', unit: 'Bungkus', stock: 45, minStock: 15, price: 3500 },
+      { id: 6, name: 'Indomie Kuah Soto Mie', category: 'Mie Instan', unit: 'Bungkus', stock: 24, minStock: 10, price: 3500 },
+      { id: 7, name: 'Mie Sedaap Goreng', category: 'Mie Instan', unit: 'Bungkus', stock: 30, minStock: 12, price: 3500 },
+      { id: 8, name: 'Pop Mie Ayam / Baso (Cup)', category: 'Mie Instan', unit: 'Cup', stock: 5, minStock: 6, price: 6000 },
+      { id: 9, name: 'Milo Kemasan Sachet', category: 'Minuman Sachet', unit: 'Sachet', stock: 28, minStock: 10, price: 3000 },
+      { id: 10, name: 'Kuku Bima Energi Sachet', category: 'Minuman Sachet', unit: 'Sachet', stock: 36, minStock: 12, price: 2000 },
+      { id: 11, name: 'Kopi Kapal Api Special Mix', category: 'Minuman Sachet', unit: 'Sachet', stock: 40, minStock: 12, price: 2500 },
+      { id: 12, name: 'Kopi Good Day Cappuccino', category: 'Minuman Sachet', unit: 'Sachet', stock: 8, minStock: 10, price: 3000 }
+    ];
+
+    let items = [];
+    let logs = [];
+    let currentCategory = 'Semua';
+    let deferredPrompt = null;
+
+    function loadData() {
+      const savedItems = localStorage.getItem(STORAGE_KEY_ITEMS);
+      const savedLogs = localStorage.getItem(STORAGE_KEY_LOGS);
+      if (savedItems) {
+        items = JSON.parse(savedItems);
+      } else {
+        items = [...DEFAULT_ITEMS];
+        saveData();
+      }
+      if (savedLogs) {
+        logs = JSON.parse(savedLogs);
+      } else {
+        logs = [
+          { id: Date.now(), name: 'Stok Awal Warung Mie Par-Par Nenek Qiara', type: 'masuk', qty: 12, unit: 'Produk', note: 'Inisialisasi data stok awal', time: new Date().toLocaleString('id-ID') }
+        ];
+        saveLogs();
+      }
+    }
+
+    function saveData() {
+      localStorage.setItem(STORAGE_KEY_ITEMS, JSON.stringify(items));
+      updateStats();
+    }
+
+    function saveLogs() {
+      localStorage.setItem(STORAGE_KEY_LOGS, JSON.stringify(logs));
+    }
+
+    function addLog(name, type, qty, unit, note = '') {
+      logs.unshift({
+        id: Date.now(),
+        name,
+        type,
+        qty,
+        unit,
+        note,
+        time: new Date().toLocaleString('id-ID')
+      });
+      if (logs.length > 100) logs.pop();
+      saveLogs();
+      renderLogs();
+    }
+
+    function updateStats() {
+      document.getElementById('statTotalJenis').textContent = items.length;
+      const totalUnit = items.reduce((acc, item) => acc + Number(item.stock), 0);
+      document.getElementById('statTotalStok').textContent = totalUnit;
+      const lowCount = items.filter(item => Number(item.stock) <= Number(item.minStock)).length;
+      document.getElementById('statPerluRestock').textContent = lowCount;
+    }
+
+    function getBadgeClass(cat) {
+      if (cat === 'Rokok') return 'badge-rokok';
+      if (cat === 'Mie Instan') return 'badge-mie';
+      if (cat === 'Minuman Sachet') return 'badge-minuman';
+      return 'badge-lainnya';
+    }
+
+    function formatRupiah(num) {
+      return 'Rp ' + Number(num || 0).toLocaleString('id-ID');
+    }
+
+    function renderItems() {
+      const query = document.getElementById('searchInput').value.toLowerCase().trim();
+      const listEl = document.getElementById('itemList');
+
+      const filtered = items.filter(item => {
+        const matchQuery = item.name.toLowerCase().includes(query) || item.category.toLowerCase().includes(query);
+        if (!matchQuery) return false;
+        if (currentCategory === 'Semua') return true;
+        if (currentCategory === 'Menipis') return Number(item.stock) <= Number(item.minStock);
+        return item.category === currentCategory;
+      });
+
+      if (filtered.length === 0) {
+        listEl.innerHTML = `<div class="empty-state">Tidak ada data barang yang sesuai filter/pencarian.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = filtered.map(item => {
+        const isOut = Number(item.stock) === 0;
+        const isLow = !isOut && Number(item.stock) <= Number(item.minStock);
+        const cardClass = isOut ? 'out-stock' : (isLow ? 'low-stock' : '');
+        const statusHtml = isOut
+          ? `<span class="status-pill status-habis">Stok Habis!</span>`
+          : (isLow
+              ? `<span class="status-pill status-menipis">Stok Menipis (Min: ${item.minStock})</span>`
+              : `<span class="status-pill status-aman">Stok Aman</span>`);
+
+        return `
+          <div class="item-card ${cardClass}">
+            <div class="item-top">
+              <div>
+                <span class="badge ${getBadgeClass(item.category)}">${item.category}</span>
+                <div class="item-name">${item.name}</div>
+                <div class="item-meta">Harga: <strong>${formatRupiah(item.price)}</strong> / ${item.unit}</div>
+                ${statusHtml}
+              </div>
+              <div class="stock-badge">
+                <div class="stock-num">${item.stock}</div>
+                <div class="stock-unit">${item.unit}</div>
+              </div>
+            </div>
+            <div class="item-actions">
+              <div class="quick-btns">
+                <button class="btn-qty btn-minus" onclick="quickChange(${item.id}, -1)" title="Kurangi 1 (Terjual)">-1 Keluar</button>
+                <button class="btn-qty btn-plus" onclick="quickChange(${item.id}, 1)" title="Tambah 1 (Masuk)">+1 Masuk</button>
+                <button class="btn-qty btn-custom" onclick="openAdjustModal(${item.id})">± Jumlah</button>
+              </div>
+              <div class="manage-btns">
+                <button class="btn-icon" onclick="openItemModal(${item.id})" title="Edit">✏️</button>
+                <button class="btn-icon" onclick="deleteItem(${item.id})" title="Hapus">🗑️</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderLogs() {
+      const logEl = document.getElementById('logList');
+      if (logs.length === 0) {
+        logEl.innerHTML = `<div class="empty-state">Belum ada riwayat mutasi stok.</div>`;
+        return;
+      }
+      logEl.innerHTML = logs.map(l => `
+        <div class="log-card ${l.type === 'masuk' ? 'log-masuk' : 'log-keluar'}">
+          <div>
+            <div class="log-title">${l.name}</div>
+            <div class="log-time">${l.time} ${l.note ? '• ' + l.note : ''}</div>
+          </div>
+          <div class="log-qty ${l.type === 'masuk' ? 'plus' : 'minus'}">
+            ${l.type === 'masuk' ? '+' : '-'}${l.qty} ${l.unit}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function setCategory(cat, btn) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderItems();
+    }
+
+    function quickChange(id, delta) {
+      const idx = items.findIndex(i => i.id === id);
+      if (idx === -1) return;
+      const item = items[idx];
+      if (delta < 0 && item.stock <= 0) {
+        alert('Stok barang ini sudah 0 (Habis)!');
+        return;
+      }
+      item.stock = Math.max(0, Number(item.stock) + delta);
+      saveData();
+      renderItems();
+      addLog(item.name, delta > 0 ? 'masuk' : 'keluar', Math.abs(delta), item.unit, delta > 0 ? 'Tambah cepat' : 'Terjual harian');
+    }
+
+    function openItemModal(editId = null) {
+      const modal = document.getElementById('itemModal');
+      document.getElementById('itemForm').reset();
+      if (editId) {
+        const item = items.find(i => i.id === editId);
+        if (!item) return;
+        document.getElementById('modalTitle').textContent = 'Edit Data Barang';
+        document.getElementById('itemId').value = item.id;
+        document.getElementById('itemName').value = item.name;
+        document.getElementById('itemCategory').value = item.category;
+        document.getElementById('itemUnit').value = item.unit;
+        document.getElementById('itemStock').value = item.stock;
+        document.getElementById('itemMin').value = item.minStock;
+        document.getElementById('itemPrice').value = item.price;
+      } else {
+        document.getElementById('modalTitle').textContent = 'Tambah Barang Baru';
+        document.getElementById('itemId').value = '';
+        document.getElementById('itemMin').value = 5;
+      }
+      modal.classList.add('open');
+    }
+
+    function closeItemModal() {
+      document.getElementById('itemModal').classList.remove('open');
+    }
+
+    function saveItem(e) {
+      e.preventDefault();
+      const idVal = document.getElementById('itemId').value;
+      const name = document.getElementById('itemName').value.trim();
+      const category = document.getElementById('itemCategory').value;
+      const unit = document.getElementById('itemUnit').value;
+      const stock = Number(document.getElementById('itemStock').value);
+      const minStock = Number(document.getElementById('itemMin').value);
+      const price = Number(document.getElementById('itemPrice').value);
+
+      if (idVal) {
+        const idx = items.findIndex(i => i.id === Number(idVal));
+        if (idx !== -1) {
+          items[idx] = { id: Number(idVal), name, category, unit, stock, minStock, price };
+        }
+      } else {
+        const newItem = { id: Date.now(), name, category, unit, stock, minStock, price };
+        items.unshift(newItem);
+        addLog(name, 'masuk', stock, unit, 'Barang baru ditambahkan');
+      }
+
+      saveData();
+      renderItems();
+      closeItemModal();
+    }
+
+    function deleteItem(id) {
+      const item = items.find(i => i.id === id);
+      if (!item) return;
+      if (confirm(`Hapus "${item.name}" dari daftar stok warung?`)) {
+        items = items.filter(i => i.id !== id);
+        saveData();
+        renderItems();
+      }
+    }
+
+    function openAdjustModal(id) {
+      const item = items.find(i => i.id === id);
+      if (!item) return;
+      document.getElementById('adjustId').value = item.id;
+      document.getElementById('adjustItemName').textContent = `${item.name} (Stok saat ini: ${item.stock} ${item.unit})`;
+      document.getElementById('adjustQty').value = 1;
+      document.getElementById('adjustNote').value = '';
+      document.getElementById('adjustModal').classList.add('open');
+    }
+
+    function closeAdjustModal() {
+      document.getElementById('adjustModal').classList.remove('open');
+    }
+
+    function submitAdjustStock(e) {
+      e.preventDefault();
+      const id = Number(document.getElementById('adjustId').value);
+      const type = document.getElementById('adjustType').value;
+      const qty = Number(document.getElementById('adjustQty').value);
+      const note = document.getElementById('adjustNote').value.trim();
+
+      const item = items.find(i => i.id === id);
+      if (!item || qty <= 0) return;
+
+      if (type === 'keluar' && item.stock < qty) {
+        alert(`Stok tidak mencukupi! Sisa stok saat ini hanya ${item.stock} ${item.unit}.`);
+        return;
+      }
+
+      item.stock = type === 'masuk' ? Number(item.stock) + qty : Number(item.stock) - qty;
+      saveData();
+      renderItems();
+      addLog(item.name, type, qty, item.unit, note || (type === 'masuk' ? 'Belanja stok masuk' : 'Barang keluar/terjual'));
+      closeAdjustModal();
+    }
+
+    function clearLogs() {
+      if (confirm('Bersihkan semua catatan riwayat mutasi stok?')) {
+        logs = [];
+        saveLogs();
+        renderLogs();
+      }
+    }
+
+    function switchView(viewId, btn) {
+      document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+      document.getElementById(viewId).classList.add('active');
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function exportCSV() {
+      let csv = 'No,Nama Barang,Kategori,Stok Saat Ini,Satuan,Batas Minimum,Harga Satuan (Rp),Status Stok\n';
+      items.forEach((item, idx) => {
+        const status = item.stock === 0 ? 'Habis' : (item.stock <= item.minStock ? 'Menipis' : 'Aman');
+        csv += `${idx + 1},"${item.name}","${item.category}",${item.stock},"${item.unit}",${item.minStock},${item.price},"${status}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Laporan_Stok_Warung_Nenek_Qiara.csv';
+      a.click();
+    }
+
+    function resetDefaultData() {
+      if (confirm('Kembalikan data ke daftar stok awal Warung Mie Par-Par Nenek Qiara?')) {
+        items = [...DEFAULT_ITEMS];
+        saveData();
+        renderItems();
+        alert('Data stok awal warung berhasil dimuat ulang!');
+      }
+    }
+
+    // PWA Install Handler
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+    });
+
+    async function handleInstallClick() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+        deferredPrompt = null;
+      } else {
+        document.getElementById('installGuideModal').classList.add('open');
+      }
+    }
+
+    // Register Service Worker for GitHub Pages PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+
+    // Init
+    loadData();
+    updateStats();
+    renderItems();
+    renderLogs();
+  </script>
+</body>
+</html>
