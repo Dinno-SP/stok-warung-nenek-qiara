@@ -1,7 +1,7 @@
 {
-  "name": "SI-STOK PRO - Warung Mie Par-Par Nenek Qiara",
-  "short_name": "Nenek Qiara Pro",
-  "description": "Aplikasi Administrasi Stok & Kasir Pintar Warung Mie Par-Par Nenek Qiara - Karya Dinno Spiner Potu",
+  "name": "Stok Warung",
+  "short_name": "Stok Warung",
+  "description": "Aplikasi Administrasi Data Stok Barang Warung Mie Par-Par Nenek Qiara - Karya Dinno Spiner Potu",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
