@@ -1,4 +1,4 @@
-const CACHE_NAME = 'warung-nenek-qiara-pro-cache-v2';
+const CACHE_NAME = 'stok-warung-cache-v3';
 const ASSETS = [
   './',
   './index.html',
