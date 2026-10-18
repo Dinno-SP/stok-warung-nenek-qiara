@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Stok Warung" />
-  <title>SI-STOK PRO — Warung Mie Par-Par Nenek Qiara</title>
+  <title>Stok Warung — Warung Mie Par-Par Nenek Qiara</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" type="image/svg+xml" href="icon.svg" />
   <link rel="apple-touch-icon" href="icon.svg" />
@@ -100,7 +100,7 @@
     }
 
     .brand-title h1 {
-      font-size: 1.15rem;
+      font-size: 1.25rem;
       font-weight: 800;
       letter-spacing: 0.2px;
       line-height: 1.2;
@@ -108,7 +108,7 @@
 
     .brand-title p {
       font-size: 0.75rem;
-      opacity: 0.85;
+      opacity: 0.9;
       margin-top: 3px;
     }
 
@@ -804,9 +804,9 @@
   <header class="app-header">
     <div class="header-top">
       <div class="brand-title">
-        <span class="brand-badge">✨ SI-STOK UMKM PRO v2.0</span>
-        <h1>Warung Mie Par-Par Nenek Qiara</h1>
-        <p>Sistem Inventori & Kasir Pintar • Mitra: Muhammad Laura Rizky</p>
+        <span class="brand-badge">✨ APLIKASI INVENTORI & KASIR UMKM</span>
+        <h1>Stok Warung</h1>
+        <p>Warung Mie Par-Par Nenek Qiara • Mitra: Muhammad Laura Rizky</p>
       </div>
       <div class="header-actions">
         <button class="btn-circle" onclick="toggleSound()" id="btnSound" title="Suara Beep Kasir">🔊</button>
@@ -937,7 +937,7 @@
     <section id="viewAnalitik" class="view-section">
       <div class="info-card">
         <h3>📈 Ringkasan Finansial & Aset Warung</h3>
-        <p>Analisis otomatis nilai modal persediaan, potensi nilai jual, dan keuntungan usaha.</p>
+        <p>Analisis otomatis nilai modal persediaan, potensi nilai jual, dan keuntungan usaha pada aplikasi Stok Warung.</p>
       </div>
 
       <div class="analytic-grid">
@@ -987,7 +987,7 @@
           <input type="file" id="restoreInput" accept=".json" style="display:none;" onchange="restoreJSON(event)" />
         </div>
         <button class="btn-block btn-outline" onclick="resetDefaultData()" style="color:var(--danger); border-color:var(--danger); margin-top:10px;">
-          🔄 Reset ke Data Standar Warung Nenek Qiara
+          🔄 Reset ke Data Standar Warung
         </button>
       </div>
 
@@ -1001,6 +1001,7 @@
 
       <div class="info-card">
         <h3>🎓 Identitas Program Magang Sosial (BUN)</h3>
+        <p><strong>Nama Aplikasi:</strong> Stok Warung</p>
         <p><strong>Mitra UMKM:</strong> Warung Mie Par-Par Nenek Qiara</p>
         <p><strong>Penanggung Jawab Mitra:</strong> Muhammad Laura Rizky</p>
         <p><strong>Mahasiswa Pelaksana:</strong> Dinno Spiner Potu (NIM: 4122611034)</p>
@@ -1159,19 +1160,19 @@
         <li>Buka link web GitHub ini di <strong>Google Chrome</strong> (Android) atau <strong>Safari</strong> (iPhone).</li>
         <li>Tekan ikon <strong>Titik Tiga (⋮)</strong> di pojok kanan atas browser Chrome.</li>
         <li>Pilih menu <strong>"Instal aplikasi" (Install app)</strong> atau <strong>"Tambahkan ke layar utama"</strong>.</li>
-        <li>Aplikasi <em>Warung Nenek Qiara</em> siap digunakan secara penuh bahkan tanpa kuota internet (Offline).</li>
+        <li>Aplikasi <em>Stok Warung</em> siap digunakan secara penuh bahkan tanpa kuota internet (Offline).</li>
       </ol>
       <button class="btn-block btn-primary" onclick="document.getElementById('installGuideModal').classList.remove('open')">Mengerti</button>
     </div>
   </div>
 
   <script>
-    const STORAGE_KEY_ITEMS = 'warung_nenek_qiara_pro_items_v2';
-    const STORAGE_KEY_LOGS = 'warung_nenek_qiara_pro_logs_v2';
-    const STORAGE_KEY_SALES = 'warung_nenek_qiara_pro_sales_v2';
-    const STORAGE_KEY_THEME = 'warung_nenek_qiara_pro_theme';
+    const STORAGE_KEY_ITEMS = 'stok_warung_items_v2';
+    const STORAGE_KEY_LOGS = 'stok_warung_logs_v2';
+    const STORAGE_KEY_SALES = 'stok_warung_sales_v2';
+    const STORAGE_KEY_THEME = 'stok_warung_theme';
 
-    // Data Standar Warung Mie Par-Par Nenek Qiara (Dilengkapi SKU, Harga Modal & Harga Jual)
+    // Data Standar Warung Mie Par-Par Nenek Qiara
     const DEFAULT_ITEMS = [
       { id: 1, sku: 'RKK-01', name: 'Rokok Gudang Garam Surya 16', category: 'Rokok', unit: 'Bungkus', stock: 18, minStock: 5, buyPrice: 31500, price: 34000, soldCount: 12 },
       { id: 2, sku: 'RKK-02', name: 'Rokok Sampoerna Mild 16', category: 'Rokok', unit: 'Bungkus', stock: 14, minStock: 5, buyPrice: 32500, price: 35000, soldCount: 9 },
@@ -1195,7 +1196,6 @@
     let soundEnabled = true;
     let deferredPrompt = null;
 
-    // Web Audio API Beep Sound
     function playBeep(freq = 880, duration = 0.08) {
       if (!soundEnabled) return;
       try {
@@ -1250,7 +1250,7 @@
 
       items = savedItems ? JSON.parse(savedItems) : JSON.parse(JSON.stringify(DEFAULT_ITEMS));
       logs = savedLogs ? JSON.parse(savedLogs) : [
-        { id: Date.now(), name: 'Inisialisasi Sistem Stok Warung Nenek Qiara', type: 'masuk', qty: 12, unit: 'Produk', note: 'Data awal siap digunakan', time: new Date().toLocaleString('id-ID') }
+        { id: Date.now(), name: 'Inisialisasi Aplikasi Stok Warung', type: 'masuk', qty: 12, unit: 'Produk', note: 'Data awal siap digunakan', time: new Date().toLocaleString('id-ID') }
       ];
       if (savedSales) salesStats = JSON.parse(savedSales);
       saveAll();
@@ -1299,7 +1299,6 @@
         restockBadge.style.display = 'none';
       }
 
-      // Analytics calculations
       const totalModal = items.reduce((acc, i) => acc + (Number(i.stock) * Number(i.buyPrice || 0)), 0);
       const totalJual = items.reduce((acc, i) => acc + (Number(i.stock) * Number(i.price || 0)), 0);
       const potensiLaba = totalJual - totalModal;
@@ -1322,7 +1321,6 @@
       return 'badge-lainnya';
     }
 
-    // ==================== RENDER TAB 1: STOK ====================
     function renderItems() {
       const query = document.getElementById('searchInput').value.toLowerCase().trim();
       const sortBy = document.getElementById('sortSelect').value;
@@ -1407,7 +1405,6 @@
       }).join('');
     }
 
-    // ==================== RENDER TAB 2: KASIR POS ====================
     function renderPOS() {
       const q = (document.getElementById('posSearchInput')?.value || '').toLowerCase().trim();
       const grid = document.getElementById('posGrid');
@@ -1561,8 +1558,9 @@
 
       const receiptHtml = `
         <div style="text-align:center; font-weight:800; margin-bottom:8px;">
+          STOK WARUNG<br/>
           WARUNG MIE PAR-PAR NENEK QIARA<br/>
-          <span style="font-size:0.72rem; font-weight:400;"> Tanggal: ${new Date().toLocaleString('id-ID')}</span>
+          <span style="font-size:0.72rem; font-weight:400;">Tanggal: ${new Date().toLocaleString('id-ID')}</span>
         </div>
         <hr style="border:none; border-top:1px dashed #94a3b8; margin:6px 0;" />
         ${receiptLines.map(l => `<div>• ${l}</div>`).join('')}
@@ -1584,14 +1582,13 @@
       showToast('Transaksi Kasir Berhasil Disimpan!', '🧾');
     }
 
-    // ==================== RENDER TAB 3: BELANJA RESTOCK ====================
     function renderRestockList(lowItems) {
       const listEl = document.getElementById('restockList');
       let totalEstCost = 0;
 
       if (lowItems.length === 0) {
         document.getElementById('restockTotalCost').textContent = 'Rp 0';
-        listEl.innerHTML = `<div class="empty-state">🎉 Luar biasa! Seluruh stok barang di Warung Mie Par-Par Nenek Qiara dalam kondisi aman.</div>`;
+        listEl.innerHTML = `<div class="empty-state">🎉 Seluruh stok barang di Warung Mie Par-Par Nenek Qiara dalam kondisi aman.</div>`;
         return;
       }
 
@@ -1661,7 +1658,7 @@
         showToast('Semua stok aman, belum perlu belanja!', '👍');
         return;
       }
-      let text = `*DAFTAR BELANJA STOK - WARUNG MIE PAR-PAR NENEK QIARA*\nTanggal: ${new Date().toLocaleDateString('id-ID')}\n\n`;
+      let text = `*DAFTAR BELANJA - STOK WARUNG (WARUNG MIE PAR-PAR NENEK QIARA)*\nTanggal: ${new Date().toLocaleDateString('id-ID')}\n\n`;
       let total = 0;
       lowItems.forEach((item, idx) => {
         const recQty = Math.max(10, (Number(item.minStock) * 2) - Number(item.stock));
@@ -1673,7 +1670,6 @@
       window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
     }
 
-    // ==================== RENDER TAB 4: ANALITIK ====================
     function renderCategoryChart(totalUnit) {
       const cats = ['Rokok', 'Mie Instan', 'Minuman Sachet', 'Lainnya'];
       const colors = { 'Rokok': '#ef4444', 'Mie Instan': '#f59e0b', 'Minuman Sachet': '#10b981', 'Lainnya': '#3b82f6' };
@@ -1707,7 +1703,6 @@
       `).join('');
     }
 
-    // ==================== CRUD & LOGS ====================
     function setCategory(cat, btn) {
       currentCategory = cat;
       document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
@@ -1885,7 +1880,6 @@
       switchView('viewBelanja', document.getElementById('navBelanja'));
     }
 
-    // ==================== EXPORT, BACKUP & RESTORE ====================
     function exportCSV() {
       let csv = 'No,Kode SKU,Nama Barang,Kategori,Stok Saat Ini,Satuan,Batas Minimum,Harga Modal (Rp),Harga Jual (Rp),Laba per Unit (Rp),Total Nilai Aset (Rp),Status Stok\n';
       items.forEach((item, idx) => {
@@ -1897,7 +1891,7 @@
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = 'Laporan_Stok_Pro_Warung_Nenek_Qiara.csv';
+      a.download = 'Laporan_Stok_Warung.csv';
       a.click();
       showToast('Laporan Excel (.CSV) berhasil diunduh!', '📊');
     }
@@ -1907,7 +1901,7 @@
       const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = 'Backup_Stok_Warung_Nenek_Qiara.json';
+      a.download = 'Backup_Stok_Warung.json';
       a.click();
       showToast('File Backup (.JSON) berhasil diunduh!', '💾');
     }
@@ -1947,7 +1941,6 @@
       }
     }
 
-    // PWA Install Handler
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
@@ -1969,7 +1962,6 @@
       });
     }
 
-    // Init App
     loadData();
     renderItems();
     renderPOS();
